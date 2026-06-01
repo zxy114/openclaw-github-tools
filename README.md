@@ -6,7 +6,7 @@ GitHub 开源项目搜索 & 日报生成工具集 — OpenClaw 技能包。
 
 ## 📖 快速了解
 
-这套技能包让你的 OpenClaw Agent 自动完成：
+这套技能包让你的 AI Agent 自动完成：
 1. **每天抓取 GitHub Trending** 热门项目 → 翻译成中文 → 生成 HTML 日报 → 部署到 GitHub Pages → 推送 Telegram 通知
 2. **按关键词搜索 GitHub 项目**（如「量化交易」「AI 基础设施」「Web 框架」）→ 生成 Top 10 中文报告 → 部署 + 通知
 
@@ -16,7 +16,7 @@ GitHub 开源项目搜索 & 日报生成工具集 — OpenClaw 技能包。
 
 ---
 
-## 🛠️ 技能列表
+## 🛠️ 技能列表（可按需单独安装）
 
 ### 1. `github-trending-daily` — 每日 Trending 日报
 
@@ -28,6 +28,8 @@ GitHub 开源项目搜索 & 日报生成工具集 — OpenClaw 技能包。
 | **核心脚本** | `scripts/generate-github-trending.sh`（54 行纯 Python，无依赖） |
 | **翻译策略** | Agent 自行翻译（不调用第三方翻译 API，质量更高） |
 
+**适合谁？** 想每天自动收到一份 GitHub 热门项目中文日报。
+
 ### 2. `github-category-search` — 按大类搜索项目
 
 | 项目 | 说明 |
@@ -35,7 +37,9 @@ GitHub 开源项目搜索 & 日报生成工具集 — OpenClaw 技能包。
 | **触发方式** | 用户说「搜索 XXX 类的 GitHub 项目」 |
 | **工作流程** | web_search → 筛选 Top 10 → Agent 手写中文 → HTML → 部署 → 通知 |
 | **输出内容** | Top 10 项目，按 star 数排序，带中文解读 |
-| **参考模板** | `references/template.html`（HTML 模板） |
+| **参考模板** | `references/template.html`（HTML 报告模板） |
+
+**适合谁？** 想随时搜索某个领域（量化交易、AI 基建、Web 框架…）的 GitHub 热门项目。
 
 **搜索示例：**
 - 「搜索量化交易的 GitHub 项目」
@@ -44,13 +48,19 @@ GitHub 开源项目搜索 & 日报生成工具集 — OpenClaw 技能包。
 
 ---
 
+## 📋 前提条件
+
+- **你需要有一个 AI Agent**（OpenClaw、Claude Desktop 或其他支持 skill 的 Agent 运行时）
+- **如果用于自动部署**：需要一个 GitHub Pages 仓库 + Telegram bot 配置
+- **如果只是查看**：脚本本身只输出 JSON，不需要任何其他依赖
+
+> 💡 **不是 OpenClaw 用户？** 核心抓取脚本 `generate-github-trending.sh` 是纯 Python，任何环境都能运行。SKILL.md 里的说明人类也能直接看懂，照着流程手动操作即可。
+
+---
+
 ## 👤 人类安装指南
 
-### 前提条件
-- 已安装 OpenClaw（https://docs.openclaw.ai）
-- 有一个用于部署报告的 GitHub Pages 仓库（如 `ai-news-daily`）
-
-### 一键安装
+### 安装全部（两个技能都要）
 
 ```bash
 cd ~/.openclaw/workspace/skills
@@ -59,11 +69,28 @@ cp -r tmp-gh-tools/skills/* .
 rm -rf tmp-gh-tools
 ```
 
-安装完成后，重启 OpenClaw，Agent 会自动识别这两个 skill。
+### 只安装日报（github-trending-daily）
+
+```bash
+cd ~/.openclaw/workspace/skills
+mkdir -p github-trending-daily/scripts
+curl -sL "https://raw.githubusercontent.com/zxy114/openclaw-github-tools/main/skills/github-trending-daily/SKILL.md" -o github-trending-daily/SKILL.md
+curl -sL "https://raw.githubusercontent.com/zxy114/openclaw-github-tools/main/skills/github-trending-daily/scripts/generate-github-trending.sh" -o github-trending-daily/scripts/generate-github-trending.sh
+chmod +x github-trending-daily/scripts/generate-github-trending.sh
+```
+
+### 只安装搜索（github-category-search）
+
+```bash
+cd ~/.openclaw/workspace/skills
+mkdir -p github-category-search/references
+curl -sL "https://raw.githubusercontent.com/zxy114/openclaw-github-tools/main/skills/github-category-search/SKILL.md" -o github-category-search/SKILL.md
+curl -sL "https://raw.githubusercontent.com/zxy114/openclaw-github-tools/main/skills/github-category-search/references/template.html" -o github-category-search/references/template.html
+```
 
 ### 部署配置（按需修改）
 
-安装后需要让 Agent 知道你的部署目标，编辑对应 SKILL.md 中的配置项：
+安装后需要让 Agent 知道你的部署目标。在对应 SKILL.md 中修改「部署配置」部分：
 
 ```markdown
 ## 部署配置
@@ -73,6 +100,28 @@ rm -rf tmp-gh-tools
 ```
 
 或者直接在对话里告诉 Agent 你的部署地址。
+
+---
+
+### 💬 发给你的 Agent
+
+复制下面的话，发给你的 AI Agent：
+
+**安装全部：**
+> 帮我安装这两个 OpenClaw skill，来源：https://github.com/zxy114/openclaw-github-tools
+> 1. `github-trending-daily` — 每日 GitHub Trending 日报
+> 2. `github-category-search` — 按关键词搜索 GitHub 项目
+> 安装完成后告诉我，并确认部署目标配置。
+
+**只安装日报：**
+> 帮我安装这个 OpenClaw skill：`github-trending-daily`（每日 GitHub Trending 日报）
+> 来源：https://github.com/zxy114/openclaw-github-tools/tree/main/skills/github-trending-daily
+> 安装完成后告诉我，并确认部署目标配置。
+
+**只安装搜索：**
+> 帮我安装这个 OpenClaw skill：`github-category-search`（按关键词搜索 GitHub 项目）
+> 来源：https://github.com/zxy114/openclaw-github-tools/tree/main/skills/github-category-search
+> 安装完成后告诉我。
 
 ---
 
@@ -96,12 +145,12 @@ ls -la github-trending-daily/ github-category-search/
 cat github-trending-daily/SKILL.md
 ```
 
-确保两个目录存在，SKILL.md 内容完整。
+确保目录存在、SKILL.md 内容完整、脚本可执行。
 
 ### 步骤 3：向用户确认
 
 告诉用户：
-> ✅ 已安装 `github-trending-daily` 和 `github-category-search` 两个 skill。
+> ✅ 已安装 `github-trending-daily` 和 `github-category-search`。
 > 你可以对我说：
 > - 「生成今天的 GitHub 日报」
 > - 「搜索量化交易的 GitHub 项目」
@@ -111,13 +160,6 @@ cat github-trending-daily/SKILL.md
 ### 步骤 4：记录部署配置
 
 把用户的部署信息写入 SKILL.md 的「部署配置」部分，或写入 `TOOLS.md` 本地笔记。
-
-### 可用工具
-- `exec`：运行 bash 命令
-- `write`：修改 SKILL.md 配置
-- `web_search`：搜索 GitHub 项目（用于 category-search）
-- `message`：发送 Telegram 通知
-- `git` 操作：提交和推送部署
 
 ---
 
