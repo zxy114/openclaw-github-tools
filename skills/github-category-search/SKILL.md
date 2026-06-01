@@ -1,6 +1,6 @@
 ---
 name: github-category-search
-description: "按关键词/大类搜索 GitHub 开源项目，生成中文 HTML 报告并部署到 GitHub Pages。"
+description: "按关键词/大类搜索 GitHub 开源项目，生成中文报告，支持聊天输出/HTML/部署上线。"
 ---
 
 # GitHub 大类项目搜索报告
@@ -19,9 +19,13 @@ description: "按关键词/大类搜索 GitHub 开源项目，生成中文 HTML 
 > - 「生成 AI 基础设施 Top 10 报告」
 > - 「找 Web 框架类的热门项目」
 >
-> **输出：** HTML 报告部署到 GitHub Pages（可选），链接推送到 Telegram（可选）
-> **如果只聊天用，零配置** —— 我搜完直接在对话里给你看，不需要任何配置
-> 只有想把报告部署上线时，才需要告诉我 GitHub Pages 仓库地址
+> **输出方式（任选）：**
+>   - 🗨️ **聊天直接看** — 我在对话里给你看结果（零配置，开箱即用）
+>   - 📄 **HTML 文件** — 生成 HTML 报告，可本地查看
+>   - 🌐 **部署上线** — 部署到静态托管平台（可选，需配置地址）
+>
+> **零配置开箱即用**——随时说关键词，我直接搜、直接给你看。
+> 只有想把报告部署上线时，才需要告诉我托管地址。
 
 ## 触发条件
 用户说「搜索 XXX 类的 GitHub 项目」「生成 XXX Top N 报告」
@@ -30,7 +34,7 @@ description: "按关键词/大类搜索 GitHub 开源项目，生成中文 HTML 
 ## 工作流
 
 ### 1. 搜索
-用 `web_search` 搜索：
+搜索 GitHub 热门项目：
 ```
 query: "github {关键词} stars:>500"
 count: 10
@@ -42,8 +46,12 @@ count: 10
 - 过滤重复/低质量/已废弃项目
 - 确认每个项目的描述、stars、主要语言
 
-### 3. 生成中文 HTML 报告
-Agent 手写中文翻译 + 解读（💡），生成 HTML：
+### 3. 生成中文内容
+Agent 手写中文翻译 + 解读（💡）：
+
+**聊天模式（零配置）：** 直接在对话里输出格式化的项目列表
+
+**HTML 模式：** 生成 HTML 报告
 - 输出路径：`<output_dir>/{category-slug}-top10-YYYY-MM-DD.html`
 - 前 3 名红色 rank，其余绿色
 - 每条包含：中文名 + 一行解读 + stars + GitHub 链接
@@ -64,16 +72,16 @@ curl -sI <pages_url>/published/<filename>.html | head -1
 ```
 
 ### 6. 发送通知（可选）
-用 `message` 工具发送 Telegram 链接。
+通过当前对话渠道发送报告链接。
 
 ## 关键规则
 - **翻译交给 Agent 自己做**，不调用任何免费翻译 API
 - 解读要有自己的观点，不要只复述描述
 - 搜索结果是动态的，每次搜索要实时抓取，不要缓存旧数据
 
-## HTML 模板
-参考 `references/template.html` 的样式结构，与 github-trending-daily 共用相同 CSS。
-
 ## 部署配置（可选，仅部署上线时需要）
-- Repo: `zxy114/ai-news-daily`
-- Pages URL: `https://zxy114.github.io/ai-news-daily`
+- Repo: `<用户自定义>`
+- Pages URL: `<用户自定义>`
+
+## HTML 模板
+参考 `references/template.html` 的样式结构。
