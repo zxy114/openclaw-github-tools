@@ -51,6 +51,11 @@ Agent 手写中文翻译 + 解读（💡）：
 
 **聊天模式（零配置）：** 直接在对话里输出格式化的项目列表
 
+**聊天输出格式要求：**
+- 每个项目必须包含 **完整的 GitHub 链接**（`https://github.com/owner/repo`）
+- 链接必须是绝对 URL，不能只写 `/owner/repo` 或 `owner/repo`
+- 格式示例：`[microsoft/markitdown](https://github.com/microsoft/markitdown)`
+
 **HTML 模式：** 生成 HTML 报告
 - 输出路径：`<output_dir>/{category-slug}-top10-YYYY-MM-DD.html`
 - 前 3 名红色 rank，其余绿色
