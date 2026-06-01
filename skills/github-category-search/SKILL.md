@@ -19,13 +19,9 @@ description: "按关键词/大类搜索 GitHub 开源项目，生成中文 HTML 
 > - 「生成 AI 基础设施 Top 10 报告」
 > - 「找 Web 框架类的热门项目」
 >
-> **输出：** HTML 报告部署到你的 GitHub Pages，链接推送到 Telegram
->
-> **需要我配置什么：**
-> 1. 你的 GitHub Pages 仓库地址（用于部署报告）
-> 2. 你的 Telegram chat ID（用于推送链接，可选）
-
-如果用户说「不需要部署」，也可以只生成 HTML 文件本地查看。
+> **输出：** HTML 报告部署到 GitHub Pages（可选），链接推送到 Telegram（可选）
+> **如果只聊天用，零配置** —— 我搜完直接在对话里给你看，不需要任何配置
+> 只有想把报告部署上线时，才需要告诉我 GitHub Pages 仓库地址
 
 ## 触发条件
 用户说「搜索 XXX 类的 GitHub 项目」「生成 XXX Top N 报告」
@@ -52,7 +48,7 @@ Agent 手写中文翻译 + 解读（💡），生成 HTML：
 - 前 3 名红色 rank，其余绿色
 - 每条包含：中文名 + 一行解读 + stars + GitHub 链接
 
-### 4. 部署
+### 4. 部署（可选）
 ```bash
 cd <repo_dir>
 cp <report_path> published/
@@ -62,18 +58,22 @@ git pull --rebase origin main
 git push
 ```
 
-### 5. 验证
+### 5. 验证（仅部署时）
 ```bash
 curl -sI <pages_url>/published/<filename>.html | head -1
 ```
 
-### 6. 发送通知
+### 6. 发送通知（可选）
 用 `message` 工具发送 Telegram 链接。
+
+## 关键规则
+- **翻译交给 Agent 自己做**，不调用任何免费翻译 API
+- 解读要有自己的观点，不要只复述描述
+- 搜索结果是动态的，每次搜索要实时抓取，不要缓存旧数据
 
 ## HTML 模板
 参考 `references/template.html` 的样式结构，与 github-trending-daily 共用相同 CSS。
 
-## 部署配置
+## 部署配置（可选，仅部署上线时需要）
 - Repo: `zxy114/ai-news-daily`
 - Pages URL: `https://zxy114.github.io/ai-news-daily`
-- Telegram target: `telegram:728346555`
